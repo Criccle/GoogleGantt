@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<widget id="GoogleGantt.widget.GoogleGantt" needsEntityContext="true" xmlns="http://www.mendix.com/widget/1.0/">
+    <name>GoogleGantt</name>
+    <description>Implement Google Gantt in your project!</description>
+
+    <icon>
+    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
+    </icon>
+
+    <properties>
+        <property key="rowItem" type="entity" required="false" isPath="no" allowNonPersistableEntities="true">
+            <caption>Row entity</caption>
+            <category>Behaviour</category>
+            <description>The row entity. This entity must be returned by the list with rows microflow</description>        
+        </property>
+        <property key="rowList" type="microflow" required="true">
+            <caption>List with rows</caption>
+            <category>Behaviour</category>
+            <description>Microflow which returns a list of rows with the chart data</description>
+            <returnType type="Object" isList="true" entityProperty="rowItem"/>
+        </property>
+        <property key="criticalPathEnabled" type="boolean" defaultValue="true">
+            <caption>CriticalPath enabled</caption>
+            <category>Critical Path</category>
+            <description>Set to true to enable display of the critical path</description>
+        </property>
+        <property key="criticalPathStyleStroke" type="string" required="false">
+            <caption>CriticalPath stroke style</caption>
+            <category>Critical Path</category>
+            <description>The color of any critical path arrows</description>
+        </property>               
+        <property key="criticalPathStyleStrokeWidth" type="string" defaultValue="1.4">
+            <caption>CriticalPath stroke width</caption>
+            <category>Critical Path</category>
+            <description>The thickness of any critical path arrows</description>
+        </property>     
+        <property key="ganttArrowColor" type="string" defaultValue="#000">
+            <caption>Color of the arrows</caption>
+            <category>Arrows</category>
+            <description>The color of the arrows</description>
+        </property>        
+        <property key="ganttArrowWidth" type="string" defaultValue="1.4">
+            <caption>Width of the arrows</caption>
+            <category>Arrows</category>
+            <description>The thickness of the arrows</description>
+        </property>     
+        <property key="ganttArrowAngle" type="integer" defaultValue="45">
+            <caption>Angle of the head of the arrows</caption>
+            <category>Arrows</category>
+            <description>The angle of the head of the arrows</description>
+        </property>     
+        <property key="ganttArrowRadius" type="integer" defaultValue="15">
+            <caption>Radius of the arrows</caption>
+            <category>Arrows</category>
+            <description>The radius for defining the curve of the arrow between two tasks</description>
+        </property>     
+        <property key="ganttGridLineStroke" type="string" required="false">
+            <caption>Color of the grid lines</caption>
+            <category>Grids</category>
+            <description>The color of the inner horizontal grid lines</description>
+        </property>        
+        <property key="ganttGridLineStrokeWidth" type="integer" defaultValue="1">
+            <caption>Width of the grid lines</caption>
+            <category>Grids</category>
+            <description>The thickness of the inner horizontal grid lines</description>
+        </property>   
+        <property key="ganttGridTrackFill" type="string" required="false">
+            <caption>Color of the grid track</caption>
+            <category>Grids</category>
+            <description>The fill color of the inner grid track</description>
+        </property>  
+        <property key="ganttGridDarkTrackFill" type="string" required="false">
+            <caption>Color of the dark grid track</caption>
+            <category>Grids</category>
+            <description>The fill color of the inner dark grid track</description>
+        </property>  
+        <property key="ganttLabelStyleFont" type="string" defaultValue="Arial">
+            <caption>Label font</caption>
+            <category>Labels</category>
+            <description>The label font</description>
+        </property>  
+        <property key="ganttLabelStyleFontSize" type="integer" defaultValue="12">
+            <caption>Label font size</caption>
+            <category>Labels</category>
+            <description>The label font size</description>
+        </property>  
+        <property key="ganttLabelStyleColor" type="string" defaultValue="#757575">
+            <caption>Label font color</caption>
+            <category>Labels</category>
+            <description>The label font color</description>
+        </property>  
+    </properties>
+</widget>
+
