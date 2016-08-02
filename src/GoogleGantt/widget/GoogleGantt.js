@@ -34,9 +34,14 @@ define([
     "dojo/html",
     "dojo/_base/event",
 
-    "dojo/text!GoogleGantt/widget/template/GoogleGantt.html"
-], function (declare, _WidgetBase, _TemplatedMixin, dom, dojoDom, dojoProp, dojoGeometry, dojoClass, domStyle, dojoConstruct, dojoArray, lang, dojoText, dojoHtml, dojoEvent, widgetTemplate) {
+    "GoogleGantt/lib/jquery-1.11.2",
+    "dojo/text!GoogleGantt/widget/template/GoogleGantt.html",
+
+    "GoogleGantt/lib/loader"
+], function (declare, _WidgetBase, _TemplatedMixin, dom, dojoDom, dojoProp, dojoGeometry, dojoClass, domStyle, dojoConstruct, dojoArray, lang, dojoText, dojoHtml, dojoEvent, _jQuery, widgetTemplate) {
     "use strict";
+
+    var $ = _jQuery.noConflict(true);
 
     // Declare widget's prototype.
     return declare("GoogleGantt.widget.GoogleGantt", [ _WidgetBase, _TemplatedMixin ], {
@@ -62,6 +67,8 @@ define([
         ganttLabelStyleFontSize: "",
         ganttLabelStyleColor: "",
 
+
+
         // Internal variables. Non-primitives created in the prototype are shared between all widget instances.
         _handles: null,
         _contextObj: null,
@@ -70,17 +77,18 @@ define([
 		_chartInitialized: null,
 		_data: null,
         _options: null,
+        _height: null,
 
         // dojo.declare.constructor is called to construct the widget instance. Implement to initialize non-primitive properties.
         constructor: function () {
         	logger.level(logger.DEBUG);
             logger.debug(this.id + ".constructor");
 
-            if (!window._googleLoading || window._googleLoading === false) {
-                window._googleLoading = true;
-                this._googleApiLoadScript = dom.script({'src' : 'https://www.gstatic.com/charts/loader.js', 'id' : 'GoogleApiLoadScript'});
-                document.getElementsByTagName('head')[0].appendChild(this._googleApiLoadScript);
-            }
+            // if (!window._googleLoading || window._googleLoading === false) {
+            //     window._googleLoading = true;
+            //     this._googleApiLoadScript = dom.script({'src' : 'https://www.gstatic.com/charts/loader.js', 'id' : 'GoogleApiLoadScript'});
+            //     document.getElementsByTagName('head')[0].appendChild(this._googleApiLoadScript);
+            // }
 
             this._handles = [];
         },
@@ -88,7 +96,6 @@ define([
         // dijit._WidgetBase.postCreate is called after constructing the widget. Implement to do extra setup work.
         postCreate: function () {
             logger.debug(this.id + ".postCreate");
-            this._updateRendering();
         },
 
         // mxui.widget._WidgetBase.update is called when context is changed or initialized. Implement to re-render and / or fetch data.
@@ -200,7 +207,9 @@ define([
 				])		
             }
 
-			this._drawChart(callback);
+            this._height = returnedList.length * 40;
+
+			this._drawChart(returnedList, callback);
         },
 
         _drawChart: function (callback) {
@@ -237,7 +246,7 @@ define([
             logger.debug("Setting option");
 
             this._options = {
-                height: 275,
+                height: this._height,
                 gantt: {
                     criticalPathEnabled: this.criticalPathEnabled,
                     criticalPathStyle: {
@@ -272,23 +281,25 @@ define([
         // Rerender the interface.
         _updateRendering: function (callback) {
             logger.debug(this.id + "._updateRendering");
-            // The callback, coming from update, needs to be executed, to let the page know it finished rendering
+           
             if (this._contextObj !== null) {
             // Display widget dom node.
             domStyle.set(this.domNode, 'display', 'block');
 	            if(!window._googleVisualization || window._googleVisualization === false) {
+                    logger.debug(this.id + "Google visualization package is about to be set")
 	                this._googleVisualization = lang.hitch(this, function () {
 	                if (typeof google !== 'undefined') {
+                        logger.debug(this.id + "Google defined, loading packages")
 	                    window._googleVisualization = true;
 	                    google.charts.load('current',{'packages' : ['gantt']});
 	                    google.charts.setOnLoadCallback(lang.hitch(this, function() {this._getData(callback);}));
 	                } else {	
 	                    var duration =  new Date().getTime() - this._startTime;
 	                    if (duration > 5000) {
-	                        console.warn('Timeout loading Google API.');
+	                        logger.debug(this.id + 'Timeout loading Google API.');
 	                        return;
-	                    }
-	                    setTimeout(this._googleVisualization,250);
+                    }
+                    setTimeout(this._googleVisualization,250);
 	                }
 	            	});
             	this._startTime = new Date().getTime();
@@ -296,6 +307,7 @@ define([
             	} 
           	} else {
             // Hide widget dom node.
+            logger.debug(this.id + "context is empty");
             domStyle.set(this.domNode, 'display', 'none');
           	}
             mendix.lang.nullExec(callback);

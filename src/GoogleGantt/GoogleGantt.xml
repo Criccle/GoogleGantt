@@ -10,12 +10,12 @@
     <properties>
         <property key="rowItem" type="entity" required="false" isPath="no" allowNonPersistableEntities="true">
             <caption>Row entity</caption>
-            <category>Behaviour</category>
+            <category>Data</category>
             <description>The row entity. This entity must be returned by the list with rows microflow</description>        
         </property>
         <property key="rowList" type="microflow" required="true">
             <caption>List with rows</caption>
-            <category>Behaviour</category>
+            <category>Data</category>
             <description>Microflow which returns a list of rows with the chart data</description>
             <returnType type="Object" isList="true" entityProperty="rowItem"/>
         </property>
