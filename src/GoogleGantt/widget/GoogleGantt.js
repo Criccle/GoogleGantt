@@ -304,7 +304,11 @@ define([
 	            	});
             	this._startTime = new Date().getTime();
             	setTimeout(this._googleVisualization,100);
-            	} 
+            	}
+                else {
+                    logger.debug(this.id + "Google already defined, loading packages");
+                    this._getData(callback);
+                } 
           	} else {
             // Hide widget dom node.
             logger.debug(this.id + "context is empty");
