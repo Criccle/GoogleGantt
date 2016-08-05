@@ -207,7 +207,7 @@ define([
 				])		
             }
 
-            this._height = returnedList.length * 40;
+            this._height = returnedList.length * 40 + 20; 
 
 			this._drawChart(returnedList, callback);
         },
