@@ -203,7 +203,7 @@ define([
         _drawChart: function (callback) {
             this._setOptions();
 
-             logger.debug("Creating Gantt chart");
+            logger.debug("Creating Gantt chart");
             this._chart = new google.visualization.Gantt($('.ganttChart')[0]);
             logger.debug("Drawing chart");
             this._chart.draw(this._data, this._options);
@@ -225,7 +225,7 @@ define([
             callback : lang.hitch(this, this._createTable),
             error : lang.hitch(this, function(error) {
                 alert(error.description);
-                mendix.lang.nullExec(callback);
+                this._executeCallback(callback);
             })
         });
         },
@@ -276,33 +276,33 @@ define([
                 if(!window._googleVisualization || window._googleVisualization === false) {
                     logger.debug(this.id + "Google visualization package is about to be set")
                     this._googleVisualization = lang.hitch(this, function () {
-                    if (typeof google !== 'undefined') {
-                        logger.debug(this.id + "Google defined, loading packages")
-                        window._googleVisualization = true;
-                        google.charts.load('current',{'packages' : ['gantt']});
-                        google.charts.setOnLoadCallback(lang.hitch(this, function() {this._getData(callback);}));
-                    } else {
-                        var duration =  new Date().getTime() - this._startTime;
-                        if (duration > 5000) {
-                            logger.debug(this.id + 'Timeout loading Google API.');
-                            return;
-                    }
-                    setTimeout(this._googleVisualization,250);
-                    }
+                        if (typeof google !== 'undefined') {
+                            logger.debug(this.id + "Google defined, loading packages")
+                            window._googleVisualization = true;
+                            google.charts.load('current',{'packages' : ['gantt']});
+                            google.charts.setOnLoadCallback(lang.hitch(this, function() {this._getData(callback);}));
+                        } else {
+                            var duration =  new Date().getTime() - this._startTime;
+                            if (duration > 5000) {
+                                logger.debug(this.id + 'Timeout loading Google API.');
+                                return;
+                            }
+                            setTimeout(this._googleVisualization,250);
+                        }
                     });
-                this._startTime = new Date().getTime();
-                setTimeout(this._googleVisualization,100);
-                }
-                else {
+                    this._startTime = new Date().getTime();
+                    setTimeout(this._googleVisualization,100);
+                } else {
                     logger.debug(this.id + "Google already defined, loading packages");
                     this._getData(callback);
                 }
-              } else {
-            // Hide widget dom node.
-            logger.debug(this.id + "context is empty");
-            domStyle.set(this.domNode, 'display', 'none');
-              }
-            mendix.lang.nullExec(callback);
+            } else {
+                // Hide widget dom node.
+                logger.debug(this.id + "context is empty");
+                domStyle.set(this.domNode, 'display', 'none');
+            }
+
+            this._executeCallback(callback);
         },
 
         // Reset subscriptions.
@@ -325,6 +325,12 @@ define([
                     val: true,
                     callback: lang.hitch(this, this._handleValidation)
                 });
+            }
+        },
+
+        _executeCallback: function (callback) {
+            if (callback && typeof callback === 'function') {
+                callback();
             }
         }
     });
