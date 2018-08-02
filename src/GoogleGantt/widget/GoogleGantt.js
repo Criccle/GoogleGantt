@@ -4,7 +4,7 @@
     ========================
 
     @file      : GoogleGantt.js
-    @version   : 1.0.0
+    @version   : 1.4.0
     @author    : Willem van Zantvoort
     @date      : 2016-06-21
     @copyright : TimeSeries Consulting
@@ -67,10 +67,7 @@ define([
         ganttLabelStyleFontSize: "",
         ganttLabelStyleColor: "",
 
-
-
         // Internal variables. Non-primitives created in the prototype are shared between all widget instances.
-        _handles: null,
         _contextObj: null,
 		_chart: null,
 		_jsonString: null,
@@ -81,16 +78,7 @@ define([
 
         // dojo.declare.constructor is called to construct the widget instance. Implement to initialize non-primitive properties.
         constructor: function () {
-        	logger.level(logger.DEBUG);
             logger.debug(this.id + ".constructor");
-
-            // if (!window._googleLoading || window._googleLoading === false) {
-            //     window._googleLoading = true;
-            //     this._googleApiLoadScript = dom.script({'src' : 'https://www.gstatic.com/charts/loader.js', 'id' : 'GoogleApiLoadScript'});
-            //     document.getElementsByTagName('head')[0].appendChild(this._googleApiLoadScript);
-            // }
-
-            this._handles = [];
         },
 
         // dijit._WidgetBase.postCreate is called after constructing the widget. Implement to do extra setup work.
@@ -183,7 +171,7 @@ define([
             		} else {
             			duration = null;
             		}
-            		
+
             	});
 
             	returnedList[i].fetch("percentCompleted", function(value) {
@@ -200,26 +188,26 @@ define([
             		} else {
             			dependencies = null;
             		}
-            	});  	
+            	});
 
             	this._data.addRows([
 					[taskID, taskName, resource, startDate, endDate, duration, percentCompleted, dependencies]
-				])		
+				])
             }
 
-            this._height = returnedList.length * 40 + 20; 
+            this._height = returnedList.length * 40 + 20;
 
 			this._drawChart(returnedList, callback);
         },
 
         _drawChart: function (callback) {
             this._setOptions();
-     		
+
      		logger.debug("Creating Gantt chart");
             this._chart = new google.visualization.Gantt($('.ganttChart')[0]);
             logger.debug("Drawing chart");
             this._chart.draw(this._data, this._options);
-         
+
           //google.charts.setOnLoadCallback(this._drawGantt(data, options));
         },
 
@@ -277,11 +265,11 @@ define([
                 }
             };
         },
-        
+
         // Rerender the interface.
         _updateRendering: function (callback) {
             logger.debug(this.id + "._updateRendering");
-           
+
             if (this._contextObj !== null) {
             // Display widget dom node.
             domStyle.set(this.domNode, 'display', 'block');
@@ -293,7 +281,7 @@ define([
 	                    window._googleVisualization = true;
 	                    google.charts.load('current',{'packages' : ['gantt']});
 	                    google.charts.setOnLoadCallback(lang.hitch(this, function() {this._getData(callback);}));
-	                } else {	
+	                } else {
 	                    var duration =  new Date().getTime() - this._startTime;
 	                    if (duration > 5000) {
 	                        logger.debug(this.id + 'Timeout loading Google API.');
@@ -308,7 +296,7 @@ define([
                 else {
                     logger.debug(this.id + "Google already defined, loading packages");
                     this._getData(callback);
-                } 
+                }
           	} else {
             // Hide widget dom node.
             logger.debug(this.id + "context is empty");
@@ -317,37 +305,26 @@ define([
             mendix.lang.nullExec(callback);
         },
 
-        _unsubscribe: function () {
-          if (this._handles) {
-              dojoArray.forEach(this._handles, function (handle) {
-                  mx.data.unsubscribe(handle);
-              });
-              this._handles = [];
-          }
-        },
-
         // Reset subscriptions.
         _resetSubscriptions: function () {
             logger.debug(this.id + "._resetSubscriptions");
             // Release handles on previous object, if any.
-            this._unsubscribe();
+            this.unsubscribeAll();
 
             // When a mendix object exists create subscribtions.
             if (this._contextObj) {
-                var objectHandle = mx.data.subscribe({
+                this.subscribe({
                     guid: this._contextObj.getGuid(),
                     callback: lang.hitch(this, function (guid) {
                         this._updateRendering();
                     })
                 });
 
-                var validationHandle = mx.data.subscribe({
+                this.subscribe({
                     guid: this._contextObj.getGuid(),
                     val: true,
                     callback: lang.hitch(this, this._handleValidation)
                 });
-
-                this._handles = [ objectHandle, validationHandle ];
             }
         }
     });
