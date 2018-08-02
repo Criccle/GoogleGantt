@@ -69,10 +69,10 @@ define([
 
         // Internal variables. Non-primitives created in the prototype are shared between all widget instances.
         _contextObj: null,
-		_chart: null,
-		_jsonString: null,
-		_chartInitialized: null,
-		_data: null,
+        _chart: null,
+        _jsonString: null,
+        _chartInitialized: null,
+        _data: null,
         _options: null,
         _height: null,
 
@@ -97,23 +97,23 @@ define([
 
         // mxui.widget._WidgetBase.resize is called when the page's layout is recalculated. Implement to do sizing calculations. Prefer using CSS instead.
         resize: function (box) {
-          	logger.debug(this.id + ".resize");
-          	if (this._chart !== null) {
-	            this._chart.draw(this._data, this._options);
-          	}
+              logger.debug(this.id + ".resize");
+              if (this._chart !== null) {
+                this._chart.draw(this._data, this._options);
+              }
         },
 
         _createTable: function (returnedList, callback) {
-        	logger.debug(this.id + "._createTable");
-        	this._data = new google.visualization.DataTable();
-        	var taskID = null;
-        	var taskName = null;
-        	var resource = null;
-        	var startDate = null;
-        	var endDate = null;
-        	var duration = null;
-        	var percentCompleted = null;
-        	var dependencies = null;
+            logger.debug(this.id + "._createTable");
+            this._data = new google.visualization.DataTable();
+            var taskID = null;
+            var taskName = null;
+            var resource = null;
+            var startDate = null;
+            var endDate = null;
+            var duration = null;
+            var percentCompleted = null;
+            var dependencies = null;
 
             this._data.addColumn('string', 'Task ID');
             this._data.addColumn('string', 'Task Name');
@@ -125,85 +125,85 @@ define([
             this._data.addColumn('string', 'Dependencies');
 
             for (var i = 0; i < returnedList.length ; i++) {
-            	returnedList[i].fetch("taskID", function(value) {
-            		if(value != null && value.valueOf() != "") {
-            			taskID = value;
-            		} else {
-            			taskID = null;
-            		}
-            	});
+                returnedList[i].fetch("taskID", function(value) {
+                    if(value != null && value.valueOf() != "") {
+                        taskID = value;
+                    } else {
+                        taskID = null;
+                    }
+                });
 
-            	returnedList[i].fetch("taskName", function(value) {
-            		if(value != null && value.valueOf() != "") {
-            			taskName = value;
-            		} else {
-            			taskName = null;
-            		}
-            	});
+                returnedList[i].fetch("taskName", function(value) {
+                    if(value != null && value.valueOf() != "") {
+                        taskName = value;
+                    } else {
+                        taskName = null;
+                    }
+                });
 
-            	returnedList[i].fetch("resource", function(value) {
-            		if(value != null && value.valueOf() != "") {
-            			resource = value;
-            		} else {
-            			resource = null;
-            		}
-            	});
+                returnedList[i].fetch("resource", function(value) {
+                    if(value != null && value.valueOf() != "") {
+                        resource = value;
+                    } else {
+                        resource = null;
+                    }
+                });
 
-            	returnedList[i].fetch("startDate", function(value) {
-            		if(value != null && value.valueOf() != "") {
-            			startDate = new Date(value);
-            		} else {
-            			startDate = null;
-            		}
-            	});
+                returnedList[i].fetch("startDate", function(value) {
+                    if(value != null && value.valueOf() != "") {
+                        startDate = new Date(value);
+                    } else {
+                        startDate = null;
+                    }
+                });
 
-            	returnedList[i].fetch("endDate", function(value) {
-            		if(value != null && value.valueOf() != "") {
-            			endDate = new Date(value);
-            		} else {
-            			endDate = null;
-            		}
-            	});
+                returnedList[i].fetch("endDate", function(value) {
+                    if(value != null && value.valueOf() != "") {
+                        endDate = new Date(value);
+                    } else {
+                        endDate = null;
+                    }
+                });
 
-            	returnedList[i].fetch("duration", function(value) {
-            		if(value != null && value.valueOf() != "") {
-            			duration = parseInt(value);
-            		} else {
-            			duration = null;
-            		}
+                returnedList[i].fetch("duration", function(value) {
+                    if(value != null && value.valueOf() != "") {
+                        duration = parseInt(value);
+                    } else {
+                        duration = null;
+                    }
 
-            	});
+                });
 
-            	returnedList[i].fetch("percentCompleted", function(value) {
-            		if(value != null && value.valueOf() != "") {
-            			percentCompleted = parseInt(value);
-            		} else {
-            			percentCompleted = null;
-            		}
-            	});
+                returnedList[i].fetch("percentCompleted", function(value) {
+                    if(value != null && value.valueOf() != "") {
+                        percentCompleted = parseInt(value);
+                    } else {
+                        percentCompleted = null;
+                    }
+                });
 
-            	returnedList[i].fetch("dependencies", function(value) {
-            		if(value != null && value.valueOf() != "") {
-            			dependencies = value;
-            		} else {
-            			dependencies = null;
-            		}
-            	});
+                returnedList[i].fetch("dependencies", function(value) {
+                    if(value != null && value.valueOf() != "") {
+                        dependencies = value;
+                    } else {
+                        dependencies = null;
+                    }
+                });
 
-            	this._data.addRows([
-					[taskID, taskName, resource, startDate, endDate, duration, percentCompleted, dependencies]
-				])
+                this._data.addRows([
+                    [taskID, taskName, resource, startDate, endDate, duration, percentCompleted, dependencies]
+                ])
             }
 
             this._height = returnedList.length * 40 + 20;
 
-			this._drawChart(returnedList, callback);
+            this._drawChart(returnedList, callback);
         },
 
         _drawChart: function (callback) {
             this._setOptions();
 
-     		logger.debug("Creating Gantt chart");
+             logger.debug("Creating Gantt chart");
             this._chart = new google.visualization.Gantt($('.ganttChart')[0]);
             logger.debug("Drawing chart");
             this._chart.draw(this._data, this._options);
@@ -212,22 +212,22 @@ define([
         },
 
         _getData: function (callback) {
-        	logger.debug(this.id + "._getData");
-        	mx.data.action({
-			params : {
-				actionname : this.rowList,
-				applyto : "selection",
-				guids : [this._contextObj.getGuid()]
-			},
-			store: {
-				caller: this.mxform
-			},
-			callback : lang.hitch(this, this._createTable),
-			error : lang.hitch(this, function(error) {
-				alert(error.description);
-				mendix.lang.nullExec(callback);
-			})
-		});
+            logger.debug(this.id + "._getData");
+            mx.data.action({
+            params : {
+                actionname : this.rowList,
+                applyto : "selection",
+                guids : [this._contextObj.getGuid()]
+            },
+            store: {
+                caller: this.mxform
+            },
+            callback : lang.hitch(this, this._createTable),
+            error : lang.hitch(this, function(error) {
+                alert(error.description);
+                mendix.lang.nullExec(callback);
+            })
+        });
         },
 
         _setOptions: function () {
@@ -273,35 +273,35 @@ define([
             if (this._contextObj !== null) {
             // Display widget dom node.
             domStyle.set(this.domNode, 'display', 'block');
-	            if(!window._googleVisualization || window._googleVisualization === false) {
+                if(!window._googleVisualization || window._googleVisualization === false) {
                     logger.debug(this.id + "Google visualization package is about to be set")
-	                this._googleVisualization = lang.hitch(this, function () {
-	                if (typeof google !== 'undefined') {
+                    this._googleVisualization = lang.hitch(this, function () {
+                    if (typeof google !== 'undefined') {
                         logger.debug(this.id + "Google defined, loading packages")
-	                    window._googleVisualization = true;
-	                    google.charts.load('current',{'packages' : ['gantt']});
-	                    google.charts.setOnLoadCallback(lang.hitch(this, function() {this._getData(callback);}));
-	                } else {
-	                    var duration =  new Date().getTime() - this._startTime;
-	                    if (duration > 5000) {
-	                        logger.debug(this.id + 'Timeout loading Google API.');
-	                        return;
+                        window._googleVisualization = true;
+                        google.charts.load('current',{'packages' : ['gantt']});
+                        google.charts.setOnLoadCallback(lang.hitch(this, function() {this._getData(callback);}));
+                    } else {
+                        var duration =  new Date().getTime() - this._startTime;
+                        if (duration > 5000) {
+                            logger.debug(this.id + 'Timeout loading Google API.');
+                            return;
                     }
                     setTimeout(this._googleVisualization,250);
-	                }
-	            	});
-            	this._startTime = new Date().getTime();
-            	setTimeout(this._googleVisualization,100);
-            	}
+                    }
+                    });
+                this._startTime = new Date().getTime();
+                setTimeout(this._googleVisualization,100);
+                }
                 else {
                     logger.debug(this.id + "Google already defined, loading packages");
                     this._getData(callback);
                 }
-          	} else {
+              } else {
             // Hide widget dom node.
             logger.debug(this.id + "context is empty");
             domStyle.set(this.domNode, 'display', 'none');
-          	}
+              }
             mendix.lang.nullExec(callback);
         },
 
