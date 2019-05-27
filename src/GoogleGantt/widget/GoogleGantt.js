@@ -219,9 +219,7 @@ define([
                 applyto : "selection",
                 guids : [this._contextObj.getGuid()]
             },
-            store: {
-                caller: this.mxform
-            },
+            origin: this.mxform,
             callback : lang.hitch(this, this._createTable),
             error : lang.hitch(this, function(error) {
                 alert(error.description);
